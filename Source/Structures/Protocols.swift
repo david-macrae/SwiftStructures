@@ -16,4 +16,13 @@ protocol Sortable {
 }
 
 
+//determine hash table compliance - (used a type and constraint)
+protocol Keyable {
+    
+    //conforming types require property
+    var keystring: String {get}
+    
+    
+   func hashValue<T>(for key: String!, using buckets: Array<T>) -> Int
+}
 

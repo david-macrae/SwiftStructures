@@ -1,5 +1,5 @@
 //
-//  HeapSort.swift
+//  PathHeap.swift
 //  SwiftStructures
 //
 //  Created by Wayne Bishop on 8/9/14.
@@ -26,7 +26,7 @@ public class PathHeap {
     
     
     //obtain the minimum path
-    func peek() -> Path! {
+    func peek() -> Path? {
         
         if heap.count > 0 {
            return heap[0] //the shortest path
@@ -57,11 +57,11 @@ public class PathHeap {
     
         
         var childIndex: Float = Float(heap.count) - 1
-        var parentIndex: Int! = 0
+        var parentIndex: Int = 0
         
         
         //calculate parent index
-        if (childIndex != 0) {
+        if childIndex != 0 {
             parentIndex = Int(floorf((childIndex - 1) / 2))
         }
 
@@ -80,7 +80,7 @@ public class PathHeap {
             
             //swap child and parent positions
             if childToUse.total < parentToUse.total {
-                swap(&heap[parentIndex], &heap[Int(childIndex)])
+                heap.swapAt(parentIndex, Int(childIndex))
             }
             
             
@@ -88,7 +88,7 @@ public class PathHeap {
             childIndex = Float(parentIndex)
 
         
-            if (childIndex != 0) {
+            if childIndex != 0 {
                 parentIndex = Int(floorf((childIndex - 1) / 2))
             }
             

@@ -80,7 +80,7 @@ class StructureTest: XCTestCase {
         
         XCTAssertNotNil(pathTest, "instance not initialized..")
         XCTAssertNil(pathTest.previous, "path previous property not initialized..")
-        XCTAssertNil(pathTest.total, "path total property not initialized..")
+        XCTAssertTrue(pathTest.total == 0, "path total property not initialized..")
         
         let testVertex: AnyObject = pathTest.destination as AnyObject
         if !(testVertex is Vertex) {
@@ -91,14 +91,14 @@ class StructureTest: XCTestCase {
 
 
     
-    func testAVLTree() {
+    func testBSNode() {
         
-        let testTree: AVLTree<Int> = AVLTree<Int>()
+        let testNode = BSNode<Int>()
         
-        XCTAssertNotNil(testTree, "instance not initialized..")
-        XCTAssertNil(testTree.key, "key property not initialized..")
-        XCTAssertNil(testTree.left, "left property not initialized..")
-        XCTAssertNil(testTree.right, "right property not initialized..")
+        XCTAssertNotNil(testNode, "instance not initialized..")
+        XCTAssertNil(testNode.key, "key property not initialized..")
+        XCTAssertNil(testNode.left, "left property not initialized..")
+        XCTAssertNil(testNode.right, "right property not initialized..")
         
     }
 

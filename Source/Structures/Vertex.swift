@@ -9,15 +9,23 @@
 import Foundation
 
 
-public class Vertex{
+public class Vertex: Keyable {
     
-    var key: String?
-    var neighbors: Array<Edge>
+    var key = String()
+    var neighbors = Array<Edge>()
     var visited: Bool = false
+    var lastModified = Date()
 
     init() {
-        self.neighbors = Array<Edge>()
     }
     
+    init(with name: String) {
+       self.key = name
+    }
+    
+    //hash table requirement
+    var keystring: String {
+        return self.key
+    }
     
 }

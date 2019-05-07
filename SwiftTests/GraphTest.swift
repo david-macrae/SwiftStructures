@@ -19,26 +19,26 @@ import XCTest
 
 class GraphTest: XCTestCase {
 
-    var testGraph: SwiftGraph = SwiftGraph()
+    var testGraph: Graph = Graph()
     
-    var vertexA: Vertex!
-    var vertexB: Vertex!
-    var vertexC: Vertex!
-    var vertexD: Vertex!
-    var vertexE: Vertex!
+    var vertexA = Vertex(with: "A")
+    var vertexB = Vertex(with: "B")
+    var vertexC = Vertex(with: "C")
+    var vertexD = Vertex(with: "D")
+    var vertexE = Vertex(with: "E")
     
     
     //called before each test invocation
     override func setUp() {
         super.setUp()
         
-        /* build the vertices */
+        /* add the vertices */
         
-        vertexA = testGraph.addVertex(key: "A")
-        vertexB = testGraph.addVertex(key: "B")
-        vertexC = testGraph.addVertex(key: "C")
-        vertexD = testGraph.addVertex(key: "D")
-        vertexE = testGraph.addVertex(key: "E")
+        testGraph.addVertex(element: vertexA)
+        testGraph.addVertex(element: vertexB)
+        testGraph.addVertex(element: vertexC)
+        testGraph.addVertex(element: vertexD)
+        testGraph.addVertex(element: vertexE)
         
         
         /* connect the vertices with weighted edges */
@@ -71,12 +71,10 @@ class GraphTest: XCTestCase {
         let destinationVertex = vertexE
         
         
-        let shortestPath: Path! = testGraph.processDijkstraWithHeap(sourceVertex!, destination: destinationVertex!)
+        let shortestPath: Path! = testGraph.processDijkstraWithHeap(sourceVertex, destination: destinationVertex)
         XCTAssertNotNil(shortestPath, "shortest path not found..")
         
         printPath(shortestPath)
-
-        
     }
     
     
@@ -89,7 +87,7 @@ class GraphTest: XCTestCase {
         let destinationVertex = vertexE
 
         
-        let shortestPath: Path! = testGraph.processDijkstra(sourceVertex!, destination: destinationVertex!)
+        let shortestPath: Path! = testGraph.processDijkstra(sourceVertex, destination: destinationVertex)
         XCTAssertNotNil(shortestPath, "shortest path not found..")
         
         printPath(shortestPath)
@@ -125,7 +123,7 @@ class GraphTest: XCTestCase {
         testGraph.traverse(vertexA) { ( node: inout Vertex) -> () in
             
             node.visited = true
-            print("traversed vertex: \(node.key!)..")
+            print("traversed vertex: \(node.key)..")
             
         }
         
@@ -143,7 +141,7 @@ class GraphTest: XCTestCase {
         */
         
         node.visited = true
-        print("traversed vertex: \(node.key!)..")
+        print("traversed vertex: \(node.key)..")
     }
 
     
@@ -163,7 +161,7 @@ class GraphTest: XCTestCase {
             }
         }
         
-        XCTFail("vertex \(neighbor.key!) is not a neighbor of vertex \(source.key!)")
+        XCTFail("vertex \(neighbor.key) is not a neighbor of vertex \(source.key)")
         
     }
     
@@ -183,7 +181,7 @@ class GraphTest: XCTestCase {
         
         //iterate and print each path sequence
         while (current != nil) {
-            print("The path is : \(current.destination.key!) with a total of : \(current.total)..")
+            print("The path is : \(current.destination.key) with a total of : \(current.total)..")
             current = current.previous
         }
 

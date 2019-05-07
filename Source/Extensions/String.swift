@@ -10,40 +10,44 @@ import Foundation
 
 
 
-extension String {
+extension String: Keyable {
     
+    //hash table requirement
+    var keystring: String {
+        return self
+    }
+
     
     //compute the length
     var length: Int {
-        return self.characters.count
+       return self.count
     }
     
     
+
     
     //determine if all characters are unique
     func isStringUnique() -> Bool {
         
-        
         //evaluate trival case
-        guard self.characters.count < 128 else {
+        guard self.count < 128 else {
             return false
         }
         
-        //match unicode representation - O(n)
-        var list = Array<Bool?>(repeatElement(nil, count: 256))
         
-        for key in self.unicodeScalars {
-            let intKey = Int(key.value)
+        //match unicode representation - O(n)
+        var list = Array<Bool?>(repeatElement(nil, count: 128))
+        
+        for scalar in self.unicodeScalars {
+            let unicode = Int(scalar.value)
             
-            if list[intKey] != nil {
+            if list[unicode] != nil {
                 return false
             }
-            
-            list.insert(true, at: Int(key.value))
+            list[unicode] = true
         }
         
         return true
-        
     }
 
     
@@ -71,7 +75,10 @@ extension String {
         
         //define the range
         let range = self.index(self.startIndex, offsetBy: to)
-        return self.substring(to: range)
+        
+       //return self.substring(to: range) - Swift 3.0
+        
+        return String(self[..<range])
     }
     
     
@@ -87,15 +94,16 @@ extension String {
     }
     
     
-    //convert a string into a character array
-    func characters() ->Array<Character> {
-        return Array(self.characters)
+    //create a unique identifer based on date
+    func identifierWithDate(date: Date) -> String {
+        
+        let cleartext = self + String(describing: date)
+        return String(cleartext.hashValue)
     }
-
     
     
     //reverse string order
-    func reverse() -> String! {
+    func reverse() -> String {
         
          /*
          notes: While this operation would normally be done with the 
@@ -103,7 +111,7 @@ extension String {
          */
         
         //convert to array
-        var characters = self.characters()
+        var characters = Array(self)
         
         var findex: Int = characters.startIndex
         var bindex: Int = characters.endIndex - 1
@@ -111,8 +119,8 @@ extension String {
         
         while findex < bindex {
             
-            //swap positions - inout parameters
-            swap(&characters[findex], &characters[bindex])
+            //swap(&characters[findex], &characters[bindex]) - Swift 3.0
+            characters.swapAt(findex, bindex)
             
             //update values
             findex += 1

@@ -8,24 +8,31 @@
 
 import XCTest
 
+
 /*
- note: fibonacci algorithms are associated directly with the Int.swift
- class an an extension.
+ note: algorithms associated directly with the Int.swift
+ class extension.
 */
 
 
 @testable import SwiftStructures
 
 
-class MathTest: XCTestCase {
+class FibTest: XCTestCase {
+
+    
+    var count: Int = 0
     
 
     override func setUp() {
         super.setUp()
     }
     
+    
+    //MARK: Sequence Based
+    
 
-    //published example - default option
+    //iterative technique
     func testFibonnaci() {
         
         let positions: Int = 4
@@ -33,12 +40,11 @@ class MathTest: XCTestCase {
         
         //test results
         buildResultsTest(results)
-        
     }
     
     
     
-    //recursive option
+    //recursive technique
     func testFibRecursive() {
         
         var positions: Int = 4
@@ -47,7 +53,6 @@ class MathTest: XCTestCase {
         
         //test results
         buildResultsTest(results)
-        
     }
     
     
@@ -56,7 +61,7 @@ class MathTest: XCTestCase {
     func testFibClosure() {
 
         
-        let positions: Int = 23
+        let positions: Int = 4
         
         let results = positions.fibClosure { (sequence: Array<Int>!) -> Int in
             
@@ -74,8 +79,38 @@ class MathTest: XCTestCase {
     }
     
     
+    //MARK: Single Answer
     
-    //MARK: Helper Function
+
+    
+    func testFibExponential() {
+        
+        let positions: Int = 4
+        let result = fibExponential(n: positions)
+        
+        print("the result is \(result)..")
+        print("count is: \(count)")
+        
+    }
+    
+    
+
+    func testFibMemoized() {
+        
+        let positions: Int = 4
+        let result = positions.fibMemoized()
+        
+        //test trivial condition
+        if result < 2 {
+            XCTFail("Test failed: fib sequence not calculated..")
+        }
+        
+    }
+    
+
+    
+    
+    //MARK: Helper Functions
     
     
     
@@ -87,14 +122,36 @@ class MathTest: XCTestCase {
             XCTFail("fibonnaci test failed..")
         }
         
-        //TODO: Adjust this so that it iterates through the entire sequence??
         
+        //check calcuated answer against basic formula..
         if r[r.endIndex - 1] != r[r.endIndex - 2] + r[r.endIndex - 3] {
             XCTFail("fibonnaci test failed..")
         }
         
-        
     }
+
     
+    
+    /*
+     notes: function included for demonstration purposes and should not be
+     considered as best practice.
+     */
+    
+    func fibExponential(n: Int) -> Int {
+        
+        print("fibExponential called..")
+        
+        count += 1
+        
+        if n == 0 {
+            return 0
+        }
+        if n <= 2 {
+            return 1
+        }
+        
+        return fibExponential(n: n-1) + fibExponential(n: n-2)
+    }
+
  
 }

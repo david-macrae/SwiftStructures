@@ -9,7 +9,7 @@
 import Foundation
 
 
-class Stack<T: Comparable> {
+class Stack<T> {
     
     private var top: Node<T>
     private var counter: Int = 0
@@ -52,13 +52,14 @@ class Stack<T: Comparable> {
         counter += 1
         
     }
+
     
 
     //remove item from the stack - O(1)
     func pop() {
         
         if self.count > 1 {
-            top = top.next
+            top = top.next!
             
             //set counter
             counter -= 1
@@ -91,6 +92,4 @@ class Stack<T: Comparable> {
         }
         
     }
-    
-
 }

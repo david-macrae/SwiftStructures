@@ -1,5 +1,5 @@
 //
-//  GraphFactory.swift
+//  Graph.swift
 //  SwiftStructures
 //
 //  Created by Wayne Bishop on 6/7/14.
@@ -9,34 +9,23 @@
 import Foundation
 
 
-public class SwiftGraph {
+public class Graph {
    
     
     //declare a default directed graph canvas
-    private var canvas: Array<Vertex>
-    public var isDirected: Bool
+    var canvas: Array<Vertex>
+    var isDirected: Bool
     
     
-    init() {
+    init(directed: Bool = true) {
         canvas = Array<Vertex>()
-        isDirected = true
+        isDirected = directed
     }
     
     
-    //create a new vertex
-    func addVertex(key: String) -> Vertex {
-        
-        
-        //set the key
-        let childVertex: Vertex = Vertex()
-        childVertex.key = key
-        
-        
-        //add the vertex to the graph canvas
-        canvas.append(childVertex)
-        
-        
-        return childVertex
+    //add vertex to graph canvas
+    func addVertex(element: Vertex) {
+        canvas.append(element)
     }
     
     
@@ -55,7 +44,7 @@ public class SwiftGraph {
         source.neighbors.append(newEdge)
         
         
-        print("The neighbor of vertex: \(source.key as String!) is \(neighbor.key as String!)..")
+        print("The neighbor of vertex: \(source.key as String?) is \(neighbor.key as String?)..")
         
         
         //check condition for an undirected graph
@@ -71,7 +60,7 @@ public class SwiftGraph {
            reverseEdge.weight = weight
            neighbor.neighbors.append(reverseEdge)
             
-           print("The neighbor of vertex: \(neighbor.key as String!) is \(source.key as String!)..")
+           print("The neighbor of vertex: \(neighbor.key as String?) is \(source.key as String?)..")
             
         }
         
@@ -114,7 +103,7 @@ public class SwiftGraph {
         
         sourcePath.destination = source
         sourcePath.previous = prev
-        sourcePath.total = nil
+        sourcePath.total = 0
         
         output = sourcePath
         
@@ -157,8 +146,9 @@ public class SwiftGraph {
         
         while frontier.count != 0 {
             
-            //support path changes using the greedy approach
             bestPath = Path()
+            
+            //support path changes using the greedy approach
             var pathIndex: Int = 0
 
             
@@ -166,13 +156,11 @@ public class SwiftGraph {
                
                 let itemPath: Path = frontier[x]
                 
-                if  (bestPath.total == nil) || (itemPath.total < bestPath.total) {
+                if  (bestPath.total == 0) || (itemPath.total < bestPath.total) {
                     bestPath = itemPath
                     pathIndex = x
                 }
-                
             }
-            
             
             
             //enumerate the bestPath edges
@@ -187,7 +175,6 @@ public class SwiftGraph {
                 
                 //add the new path to the frontier
                 frontier.append(newPath)
-                
             }
             
             
@@ -212,7 +199,7 @@ public class SwiftGraph {
             
             if (itemPath.destination.key == destination.key) {
                 
-                if  (shortestPath.total == nil) || (itemPath.total < shortestPath.total) {
+                if  (shortestPath.total == 0) || (itemPath.total < shortestPath.total) {
                     shortestPath = itemPath
                 }
                 
@@ -228,7 +215,7 @@ public class SwiftGraph {
     
     
     ///an optimized version of Dijkstra's shortest path algorthim
-    func processDijkstraWithHeap(_ source: Vertex, destination: Vertex) -> Path! {
+    func processDijkstraWithHeap(_ source: Vertex, destination: Vertex) -> Path? {
         
         
         let frontier: PathHeap = PathHeap()
@@ -253,14 +240,12 @@ public class SwiftGraph {
         
         
         //construct the best path
-        var bestPath: Path = Path()
-        
-        
         while frontier.count != 0 {
                         
             //use the greedy approach to obtain the best path
-            bestPath = Path()
-            bestPath = frontier.peek()
+            guard let bestPath: Path = frontier.peek() else {
+                break
+            }
             
             
             //enumerate the bestPath edges
@@ -294,7 +279,7 @@ public class SwiftGraph {
         
         
         //obtain the shortest path from the heap
-        var shortestPath: Path! = Path()
+        var shortestPath: Path? = Path()
         shortestPath = finalPaths.peek()
         
         
@@ -304,6 +289,7 @@ public class SwiftGraph {
     
     
     //MARK: traversal algorithms
+    
     
     
     //bfs traversal with inout closure function
@@ -320,14 +306,16 @@ public class SwiftGraph {
         
         while !graphQueue.isEmpty() {
             
-            //traverse the next queued vertex
-            var vitem: Vertex = graphQueue.deQueue() as Vertex!
             
+            //traverse the next queued vertex
+            guard var vitem = graphQueue.deQueue() else {
+                break
+            }
             
             //add unvisited vertices to the queue
             for e in vitem.neighbors {
                 if e.neighbor.visited == false {
-                    print("adding vertex: \(e.neighbor.key!) to queue..")
+                    print("adding vertex: \(e.neighbor.key) to queue..")
                     graphQueue.enQueue(e.neighbor)
                 }
             }
@@ -340,7 +328,7 @@ public class SwiftGraph {
             
             //invoke formula
             formula(&vitem)
-            
+
             
         } //end while
         
@@ -367,24 +355,24 @@ public class SwiftGraph {
         
         while !graphQueue.isEmpty() {
             
-            //traverse the next queued vertex
-            let vitem = graphQueue.deQueue() as Vertex!
             
-            guard vitem != nil else {
-                return
+            //traverse the next queued vertex
+            guard let vitem = graphQueue.deQueue() else {
+                break
             }
+
             
             //add unvisited vertices to the queue
-            for e in vitem!.neighbors {
+            for e in vitem.neighbors {
                 if e.neighbor.visited == false {
-                    print("adding vertex: \(e.neighbor.key!) to queue..")
+                    print("adding vertex: \(e.neighbor.key) to queue..")
                     graphQueue.enQueue(e.neighbor)
                 }
             }
             
             
-            vitem!.visited = true
-            print("traversed vertex: \(vitem!.key!)..")
+            vitem.visited = true
+            print("traversed vertex: \(vitem.key)..")
             
             
         } //end while
@@ -411,31 +399,33 @@ public class SwiftGraph {
         
         while !graphQueue.isEmpty() {
             
+            //traverse the next queued vertex - Swift 4.0
+            //let vitem = graphQueue.deQueue() as Vertex!
+
             //traverse the next queued vertex
-            let vitem = graphQueue.deQueue() as Vertex!            
-            
-            guard vitem != nil else {
-                return
+            guard let vitem = graphQueue.deQueue() else {
+                break
             }
+
             
             //add unvisited vertices to the queue
-            for e in vitem!.neighbors {
+            for e in vitem.neighbors {
                 if e.neighbor.visited == false {
-                    print("adding vertex: \(e.neighbor.key!) to queue..")
+                    print("adding vertex: \(e.neighbor.key) to queue..")
                     graphQueue.enQueue(e.neighbor)
                 }
             }
             
             
             //apply formula..
-            if formula(vitem!) == false {
-                print("formula unable to update: \(vitem!.key)")
+            if formula(vitem) == false {
+                print("formula unable to update: \(String(describing: vitem.key))")
             }
             else {
-                print("traversed vertex: \(vitem!.key!)..")
+                print("traversed vertex: \(vitem.key)..")
             }
             
-            vitem!.visited = true
+            vitem.visited = true
             
             
         } //end while

@@ -11,6 +11,39 @@ import Foundation
 
 extension Array where Element: Comparable {
 
+        
+        //determines the longest sequence of specified values
+    func longestSequence(of key: Element) -> Int {
+            
+            //initial values
+            var current: Element
+            var counter: Int = 0
+            var longest: Int = 0
+            
+            //iterate through list - O(n)
+            for s in self {
+                
+                //current iteration
+                current = s
+                
+                if current == key {
+                    counter += 1
+                }
+                else {
+                    counter = 0
+                }
+                
+                //preserve the longest sequence
+                if counter >= longest {
+                    longest = counter
+                }
+            }
+            
+            //return count results
+            return longest
+            
+        }
+    
     
     //MARK: Index Operation
     
@@ -185,7 +218,7 @@ extension Array where Element: Comparable {
                 
                 //compare / swap positions
                 if (key > output[secondaryIndex + 1]) {
-                    swap(&output[secondaryIndex], &output[secondaryIndex + 1])
+                    output.swapAt(secondaryIndex, secondaryIndex + 1)
                 }
             }
         }
@@ -240,7 +273,7 @@ extension Array where Element: Comparable {
             
             // swap minimum value with array iteration
             if primaryindex != minimum {
-                swap(&output[primaryindex], &output[minimum])
+                output.swapAt(primaryindex, minimum)
             }
             
         }
@@ -294,7 +327,7 @@ extension Array where Element: Comparable {
             
             if self[currentIndex] <= self[pivot] {
                 if wallIndex != currentIndex {
-                    swap(&self[currentIndex], &self[wallIndex])
+                    self.swapAt(currentIndex, wallIndex)
                 }
                 
                 //advance wall
@@ -305,7 +338,7 @@ extension Array where Element: Comparable {
         
         //move pivot to final position
         if wallIndex != pivot {
-            swap(&self[wallIndex], &self[pivot])
+            self.swapAt(wallIndex, pivot)
         }
         
         return wallIndex

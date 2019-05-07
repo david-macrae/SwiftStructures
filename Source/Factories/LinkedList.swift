@@ -1,5 +1,5 @@
 //
-//  SwiftFactory.swift
+//  LinkedList.swift
 //  SwiftStructures
 //
 //  Created by Wayne Bishop on 6/7/14.
@@ -9,43 +9,34 @@
 import Foundation
 
 
-public class LinkedList<T: Equatable> {
+class LinkedList<T> {
     
     
    //new instance
    private var head = LLNode<T>()
+   private var counter: Int  = 0
     
     
-  
-   var count: Int {
-        
-            if head.key == nil {
-                return 0
-            }
-                
-            else  {
-                
-                var current: LLNode = head
-                var x: Int = 1
-                
-                
-                //cycle through the list of items
-                while current.next != nil {
-                    current = current.next!
-                    x += 1
-                }
-                
-                return x
-                
-            }
+    
+    //the number of items - O(1)
+    var count: Int {
+        return counter
     }
+
     
+    //find subscript shortcut
+    subscript(index: Int) -> LLNode<T>? {
+        get {
+           return find(at: index)
+        }
+    }
     
     
     //empty list check
-    func isEmpty() -> Bool! {
-        return self.count == 0 || head.key == nil
+    func isEmpty() -> Bool {
+        return counter == 0 || head.key == nil
     }
+    
     
     
     
@@ -56,6 +47,7 @@ public class LinkedList<T: Equatable> {
         //trivial check
         guard head.key != nil else {
             head.key = key
+            counter += 1
             return
         }
     
@@ -82,6 +74,7 @@ public class LinkedList<T: Equatable> {
             
         } //end while
         
+        counter += 1
     }
     
 
@@ -89,15 +82,17 @@ public class LinkedList<T: Equatable> {
     //print all keys for the class
     func printAllKeys() {
         
-        var current: LLNode! = head
+        //a dictionary - O(1)
+        
+        var current: LLNode? = head
         
         print("------------------")
         
         //assign the next instance
         
         while current != nil {
-            print("link item is: \(current.key)")
-            current = current.next
+            print("link item is: \(String(describing: current?.key!))")
+            current = current?.next
         }
         
     }
@@ -107,7 +102,7 @@ public class LinkedList<T: Equatable> {
     
     
     //obtain link at a specific index
-    func getElement(at index: Int) ->LLNode<T>! {
+    func find(at index: Int) ->LLNode<T>? {
 
         
         //check empty conditions
@@ -117,21 +112,19 @@ public class LinkedList<T: Equatable> {
         
             
         else  {
-            var current: LLNode<T>! = head
+            var current: LLNode<T> = head
             var x: Int = 0
 
             
             //cycle through elements
             while (index != x) {
-                current = current.next
+                current = current.next!
                 x += 1
             }
             
             return current
             
         } //end else
-        
-        
     }
 
     
@@ -150,6 +143,7 @@ public class LinkedList<T: Equatable> {
         //establish the head node
         guard head.key != nil else {
             head.key = key
+            counter += 1
             return
         }
         
@@ -206,6 +200,8 @@ public class LinkedList<T: Equatable> {
             
         } //end while
         
+        counter += 1
+        
     }
 
     
@@ -229,7 +225,11 @@ public class LinkedList<T: Equatable> {
         //determine if the removal is at the head
         if (index == 0) {
             current = current?.next
-            head = current!
+            
+            if let headitem = current {
+                head = headitem
+                counter -= 1
+            }
             return
         }
         
@@ -253,6 +253,7 @@ public class LinkedList<T: Equatable> {
             
         } //end while
         
+        counter -= 1
         
     } //end function
     
@@ -292,7 +293,6 @@ public class LinkedList<T: Equatable> {
     
   }
     
-  
     
     
     //MARK: Closure operations
@@ -306,7 +306,7 @@ public class LinkedList<T: Equatable> {
     
     
     //filter list content - higher order function
-    func filter(_ formula: (LLNode<T>) -> Bool) -> LinkedList<T>! {
+    func filter(_ formula: (LLNode<T>) -> Bool) -> LinkedList<T>? {
         
         
         //check for instance
@@ -316,17 +316,18 @@ public class LinkedList<T: Equatable> {
         
         
         var current: LLNode! = head
-        let results: LinkedList<T>! = LinkedList<T>()
+        let results: LinkedList<T>? = LinkedList<T>()
         
         
         while current != nil {
             
             //filter based on formula
             if formula(current) == true {
-                results.append(element: current.key)
+                if let key = current.key {
+                    results?.append(element: key)
+                }
             }
-            
-            
+                        
             current = current.next
         }
         
@@ -348,7 +349,7 @@ public class LinkedList<T: Equatable> {
         
         
         var current: LLNode! = head
-        let results: LinkedList<T>! = LinkedList<T>()
+        let results: LinkedList<T> = LinkedList<T>()
         var newKey: T!
         
         

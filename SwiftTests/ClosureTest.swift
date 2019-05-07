@@ -41,7 +41,7 @@ class ClosureTest: XCTestCase {
         
         //inline closure expression
         let results: LinkedList<Int>! = linkedList.filter { (node: LLNode<Int>) -> Bool in
-            return node.key > 5
+            return node.key! > 5
         }
         
         //display filtered results
@@ -86,20 +86,22 @@ class ClosureTest: XCTestCase {
         //inline closure expression
         let results: LinkedList<Int> = linkedList.map { (node: LLNode<Int>) -> Int in
 
-            var value: Int!
+            var value: Int = 0
             
-            //evaluate based on switch
-            switch node.key {
+            if let key = node.key {
+                
+                //evaluate based on switch
+                switch key {
                 case 0..<5:
-                    value = node.key * 2
+                    value = key * 2
                 case 5...10:
-                    value = node.key * 3
+                    value = key * 3
                 default:
-                    value = node.key
+                    value = key
+                }
             }
             
             return value
-            
             
         } //end closure
 
@@ -111,7 +113,7 @@ class ClosureTest: XCTestCase {
         //iterate and compare values
         for s in 0..<numberList.count {
             
-            if linkedList.getElement(at: s).key == results.getElement(at: s).key {
+            if linkedList.find(at: s)?.key == results.find(at: s)?.key {
                 XCTFail("test failed: linked list map formula not applied..")
             }
             
@@ -141,7 +143,7 @@ class ClosureTest: XCTestCase {
         //iterate and compare values
         for s in 0..<numberList.count {
             
-            if linkedList.getElement(at: s).key == results.getElement(at: s).key {
+            if linkedList.find(at: s)?.key == results.find(at: s)?.key {
                 XCTFail("linked list map formula not applied..")
             }
             
@@ -157,7 +159,7 @@ class ClosureTest: XCTestCase {
     
     //function to be passed as a parameter
     func filterFormula(node: LLNode<Int>) -> Bool {
-        return node.key > 5
+            return node.key! > 5
     }
 
     
@@ -165,21 +167,22 @@ class ClosureTest: XCTestCase {
     //function to be passed as a parameter
     func mapFormula(node: LLNode<Int>) -> Int {
         
-        var value: Int!
+        var value: Int = 0
         
-        //evaluate based on switch
-        switch node.key {
-        case 0..<5:
-            value = node.key * 2
-        case 5...10:
-            value = node.key * 3
-        default:
-            value = node.key
+        if let key = node.key {
+            
+            //evaluate based on switch
+            switch key {
+            case 0..<5:
+                value = key * 2
+            case 5...10:
+                value = key * 3
+            default:
+                value = key
+            }
         }
         
         return value
-
-        
     }
   
     
